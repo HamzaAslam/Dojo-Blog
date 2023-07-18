@@ -15,6 +15,7 @@
 <script>
 import { ref } from "vue";
 import { useRouter } from "vue-router";
+import { projectFireStore, timestamp } from "../firebase/config.js";
 export default {
   setup() {
     const title = ref("");
@@ -35,13 +36,10 @@ export default {
         title: title.value,
         body: body.value,
         tags: tags.value,
+        createdAt: timestamp(),
       };
 
-      await fetch("http://localhost:3000/posts", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(post),
-      });
+      const res = await projectFireStore.collection("posts").add(post);
 
       //   title.value = "";
       //   body.value = "";
